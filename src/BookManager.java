@@ -78,7 +78,7 @@ public class BookManager {
     }
 
 
-    private String inputName() {
+    public String inputName() {
         System.out.print("Input name: ");
         return scanner.nextLine();
     }

@@ -18,7 +18,7 @@ public class Main {
                         bookManager.add();
                         break;
                     case "2":
-                        phoneBookName = BookManager.inputName();
+                        phoneBookName = bookManager.inputName();
                         bookManager.edit(phoneBookName);
                         break;
                     case "3":
