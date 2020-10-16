@@ -1,23 +1,35 @@
 import java.io.Serializable;
 
 public class PhoneBook implements Serializable {
+    private int id;
     private String name;
     private String phone;
     private String address;
     private String sex;
     private String email;
 
-    public PhoneBook(String trim, String s, String trim1, String s1, String trim2) {
+    public PhoneBook(String datum, String name, String phone, String address, String sex, String email) {
 
     }
 
-    public PhoneBook(String name, String phone, String address, String sex, String date, String email) {
+
+
+    public PhoneBook(int id, String name, String phone, String address, String sex, String email) {
+        this.id=id;
         this.name = name;
         this.phone = phone;
         this.address = address;
         this.sex = sex;
 //        this.date = date;
         this.email = email;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -68,5 +80,7 @@ public class PhoneBook implements Serializable {
         this.email = email;
     }
 
-
+    public String toCSV() {
+        return id + "," + name + "," + phone + "," + address + "," + sex + ","  + "," + email + "," ;
+    }
 }

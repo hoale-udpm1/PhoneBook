@@ -1,20 +1,36 @@
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
+public class IOFile {
+    BookManager bookManager = new BookManager();
+    public void writeFile(ArrayList<PhoneBook> list) throws IOException {
+        File file = new File("phoneBook.csv");
+        PrintWriter fileWriter = new PrintWriter(file);
+        for (PhoneBook phonebook :bookManager.phoneBookList) {
+            fileWriter.println(phonebook.toCSV());
+        }
+        fileWriter.close();
+    }
+    public ArrayList<PhoneBook> readFromFile() throws IOException {
+        File file = new File("phoneBook.csv");
+        FileReader fileReader = new FileReader(file);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String line = "";
+        ArrayList<PhoneBook> list = new ArrayList<>();
+        while ((line = bufferedReader.readLine()) != null) {
+            String[] data = line.split(",");
+            PhoneBook phonebook = new PhoneBook(data[0], data[1], data[2], data[3], data[4], data[5]);
+            list.add(phonebook);
+        }
+        return list;
+    }
 
-public class PhoneBookDao {
-    private static final String PHONEBOOK_FILE_NAME = "phoneBook.txt";
+//    public void
 //    List<PhoneBook> phoneBooks = new ArrayList<>();
-
+//
 //        try(BufferedReader bir = new BufferedReader(new FileReader(path))) {
 //        String line = bir.readLine();
 //        while (line != null) {
@@ -47,7 +63,7 @@ public class PhoneBookDao {
 //    } catch(IOException e){
 //        e.printStackTrace();
 //    }
-
+//
 //    public static List getPhoneBookInfor(String line) {
 //        List<String> result = new ArrayList<>();
 //        Stack<Character> stack = new Stack<>();
@@ -72,63 +88,4 @@ public class PhoneBookDao {
 //        return result;
 //
 //    }
-
-    public void write(List<PhoneBook> phoneBookList) {
-        FileOutputStream fos = null;
-        ObjectOutputStream oos = null;
-        try {
-            fos = new FileOutputStream(new File(PHONEBOOK_FILE_NAME));
-            oos = new ObjectOutputStream(fos);
-            oos.writeObject(phoneBookList);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            closeStream(fos);
-            closeStream(oos);
-        }
-    }
-
-    public List<PhoneBook> read() {
-        List<PhoneBook> phoneBookList = new ArrayList<>();
-        FileInputStream fis = null;
-        ObjectInputStream ois = null;
-        try {
-            fis = new FileInputStream(new File(PHONEBOOK_FILE_NAME));
-            ois = new ObjectInputStream(fis);
-            phoneBookList = (List<PhoneBook>) ois.readObject();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            closeStream(fis);
-            closeStream(ois);
-        }
-        return phoneBookList;
-    }
-
-    private void closeStream(InputStream is) {
-        if (is != null) {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-    private void closeStream(OutputStream os) {
-        if (os != null) {
-            try {
-                os.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

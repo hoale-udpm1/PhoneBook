@@ -1,11 +1,9 @@
-import javax.naming.Name;
-import java.rmi.Naming;
-import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+
 public class BookManager {
     public static Scanner scanner = new Scanner(System.in);
-    private List<PhoneBook> phoneBookList;
+    public List<PhoneBook> phoneBookList;
     private PhoneBookDao phoneBookDao;
 
 
@@ -16,24 +14,24 @@ public class BookManager {
 
     public void add() {
         int id = (phoneBookList.size() > 0) ? (phoneBookList.size() + 1) : 1;
-        System.out.println("phonebook = " + inputName());
+        System.out.println("phonebook id =" + id);
         String name = inputName();
         String phone = inputPhone();
         String sex = inputSex();
         String address = inputAddress();
         String email = inputEmail();
 
-        PhoneBook phoneBook = new PhoneBook(name, phone, sex, address, email);
+        PhoneBook phoneBook = new PhoneBook(id, name, phone, sex, address, email);
         phoneBookList.add(phoneBook);
         phoneBookDao.write(phoneBookList);
     }
 
 
-    public void edit(String name) {
+    public void edit(int id) {
         boolean isExisted = false;
         int size = phoneBookList.size();
         for (int i = 0; i < size; i++) {
-            if (phoneBookList.get(i).getName() == name) {
+            if (phoneBookList.get(i).getId() == id) {
                 isExisted = true;
                 phoneBookList.get(i).setName(inputName());
                 phoneBookList.get(i).setPhone(inputPhone());
@@ -44,17 +42,17 @@ public class BookManager {
             }
         }
         if (!isExisted) {
-            System.out.printf("name = %d not existed.\n", name);
+            System.out.printf("id = %d not existed.\n", id);
         } else {
             phoneBookDao.write(phoneBookList);
         }
     }
 
-    public void delete(String name) {
+    public void delete(int id) {
         PhoneBook phoneBook = null;
         int size = phoneBookList.size();
         for (int i = 0; i < size; i++) {
-            if (phoneBookList.get(i).getName() == name) {
+            if (phoneBookList.get(i).getId() == id) {
                 phoneBook = phoneBookList.get(i);
                 break;
             }
@@ -63,20 +61,32 @@ public class BookManager {
             phoneBookList.remove(phoneBook);
             phoneBookDao.write(phoneBookList);
         } else {
-            System.out.printf("id = %d not existed.\n", name);
+            System.out.printf("id = %d not existed.\n", id);
         }
     }
 
     public void show() {
         for (PhoneBook phoneBook : phoneBookList) {
-            System.out.format("%5d | ", phoneBook.getName());
+            System.out.format("%5d | ", phoneBook.getId());
+            System.out.format("%20s | ", phoneBook.getName());
             System.out.format("%20s | ", phoneBook.getPhone());
-            System.out.format("%5d | ", phoneBook.getSex());
+            System.out.format("%20s | ", phoneBook.getSex());
             System.out.format("%20s | ", phoneBook.getAddress());
-            System.out.format("%10.1f%n", phoneBook.getEmail());
+            System.out.format("%20s|", phoneBook.getEmail());
         }
     }
 
+    public int inputId() {
+        System.out.print("Input id: ");
+        while (true) {
+            try {
+                int id = Integer.parseInt((scanner.nextLine()));
+                return id;
+            } catch (NumberFormatException ex) {
+                System.out.print("invalid! Input id again: ");
+            }
+        }
+    }
 
     public String inputName() {
         System.out.print("Input name: ");
